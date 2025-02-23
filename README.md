@@ -1,16 +1,19 @@
 # MySocial - A simple social network
 
-My Social is a simple social network that is almost similar to Instagram and is developed with Django.
+ My Social is a simple social network that is almost similar to Instagram and is developed with Django.
 And it provides the possibility of creating posts and interacting with each other.
 
 
 ## Key features
-- Create and manage posts
-- User authentication system
-- Ability to interact with posts (like and comment)
-- User profile management
+:white_check_mark: Create and manage posts
 
-## Installation and Setup
+:white_check_mark: User authentication system
+
+:white_check_mark: Ability to interact with posts (like and comment)
+
+:white_check_mark: User profile management
+
+## :wrench: Installation and Setup
 
 1. Clone the repository:
    ```bash
