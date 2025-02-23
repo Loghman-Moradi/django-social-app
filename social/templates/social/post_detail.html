@@ -1,0 +1,159 @@
+{#{% extends 'parent/base.html' %}#}
+{% block title %} post detail {% endblock %}
+{% block content %}
+    <h2>post detail </h2>
+    {% for img in post.images.all %}
+        <img width="200" height="150" src="{{ img.file_image.url }}" alt="{{ img.file_image.url }}">
+    {% endfor %}
+
+    <div class="post" data-post-id="{{ post.id }}">
+        {{ post.description |truncatewords:20 |linebreaks }}
+        Created Post at {{ post.created }} by {{ post.author }}
+        <br>
+        <button class="like-button">
+            {% if request.user in post.likes.all %}
+                Unlike
+            {% else %}
+                Like
+            {% endif %}
+        </button>
+        <span class="likes-count">{{ post.likes.count }}</span> Likes
+    </div>
+    <br>
+    <button class="save-post">
+        {% if user in post.saves.all %}
+            Unsave
+        {% else %}
+            Save
+        {% endif %}
+    </button>
+    <br>
+    <button class="share-post" onclick="toggleShareLinks()">Share</button>
+    <div class="share-links" style="display: none;">
+        <a href="mailto:?subject={{ post.author }}&body={{ post.description }}">اشتراک گذاری از طریق ایمیل</a>
+        <br>
+        <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text={{ post.description }}">اشتراک گذاری در تلگرام</a>
+        <br>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">اشتراک گذاری در فیسبوک</a>
+    </div>
+
+
+    <br>
+    {% for tag in post.tags.all %}
+        <a href="{% url 'social:post_list_by_tag' tag.slug %}">{{ tag.name }}</a>
+        {% if not forloop.last %}, {% endif %}
+    {% endfor %}
+    <br>
+    <br>
+    <a href="{% url 'social:edit_post' post.id %}">ویرایش پست</a>
+    <br>
+    <a href="{% url 'social:delete_post' post.id %}">حذف پست </a>
+
+    <h2>Similarly Post Tagged </h2>
+    {% for post in similar_post %}
+    <p>
+        <a href="{{ post.get_absolute_url }}">{{ post.description|truncatewords:10|linebreaks }}</a>
+    </p>
+    {% empty %}
+        There are not similar posts
+    {% endfor %}
+    <br>
+    <br>
+
+
+{#comment#}
+
+<form id="comment-form" method="post" action="{% url 'social:add_comment' post.id %}">
+    {% csrf_token %}
+    <textarea name="description" placeholder="کامنت"></textarea>
+    <input type="submit" value="ارسال">
+</form>
+
+<div id="comments">
+    {% for comment in post.comments.all %}
+        <div class="comment">
+            <strong>{{ comment.name }}:</strong> {{ comment.description }}
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+        $('.like-button').click(function() {
+            var post_id = $(this).closest('.post').data('post-id');
+            var button = $(this);
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'social:like_post' %}',
+                data: {'post_id': post_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(data) {
+                    if (data.liked){
+                        button.text('UnLike');
+                    } else {
+                        button.text('Like');
+                    }
+                    $('.likes-count').text(data.likes_count);
+                },
+            });
+
+        });
+
+        $(".save-post").click(function () {
+            var button = $(this);
+            $.ajax({
+                type: "POST",
+                url: "/save-post/",
+                data: { 'csrfmiddlewaretoken': '{{ csrf_token }}', 'post_id': {{post.id}} },
+                success: function (data) {
+                    if (data.saved) {
+                        button.text("Unsave");
+                    } else {
+                        button.text("Save");
+                    }
+                },
+                error: function (error) {
+                    console.log("خطا در ارسال درخواست Ajax: " + error);
+                }
+            });
+        });
+    });
+
+    function toggleShareLinks() {
+        const shareLinks = document.querySelector('.share-links');
+        if (shareLinks.style.display === 'none' || shareLinks.style.display === '') {
+            shareLinks.style.display = 'block';
+        } else {
+            shareLinks.style.display = 'none';
+        }
+    }
+
+    {#comment/////#}
+
+     $('#comment-form').on('submit', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            success: function(response) {
+                $('#comments').append(`
+                    <div class="comment">
+                        <strong>${response.name}</strong>: ${response.description}
+
+                    </div>
+                `);
+                $('#comment-form textarea').val('');
+            },
+            error: function() {
+                alert('Error posting comment. Please try again.');
+            }
+        });
+    });
+</script>
+
+
+

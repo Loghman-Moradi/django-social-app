@@ -1,0 +1,23 @@
+{% load static %}
+{% load thumbnail %}
+<h2>پست های ذخیره شده ی شما</h2>
+
+{% with user=request.user %}
+    <p>{{ user.get_full_name }}</p>
+    {% if user.photo %}
+        <a href="{{ user.photo.url }}">
+        <img src="{% thumbnail user.photo 150x200 quality=90 %}">
+        </a>
+    {% else %}
+        <img src="{% static 'image/pofile/avatar.jpg' %}" style="width: 200px;">
+    {% endif %}
+{% endwith %}
+
+
+<ul>
+    {% for post in saved_posts %}
+        <a href="{{ post.get_absolute_url }}">{{ post.description |truncatewords:20|linebreaks}}</a>
+        Created at {{ post.created }} by {{ post.author }}
+        <br><br><hr>
+    {% endfor %}
+</ul>

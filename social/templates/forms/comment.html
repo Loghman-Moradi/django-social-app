@@ -1,0 +1,14 @@
+{% extends 'parent/base.html' %}
+{% block title %} comment {% endblock %}
+{% block content %}
+    {% if comment %}
+        <p>کامنت شما با موفقیت ثبت شد</p>
+        <a href="{% url 'social:post_detail' post.id %}">برگشت</a>
+    {% else %}
+        <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="ارسال">
+    </form>
+    {% endif %}
+{% endblock %}

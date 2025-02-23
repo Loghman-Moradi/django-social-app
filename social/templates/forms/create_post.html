@@ -1,0 +1,15 @@
+<div>
+    <h2>ایجاد پست</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if post %}
+            {% for img in post.images.all %}
+                <img width="200" height="150" src="{{ img.file_image.url }}" alt="{{ img.file_image.url }}">
+                <a href="{% url 'social:delete_image' img.id %}">حذف تصویر </a>
+                <br>
+            {% endfor %}
+        {% endif %}
+        <input type="submit" value="ارسال">
+    </form>
+</div>

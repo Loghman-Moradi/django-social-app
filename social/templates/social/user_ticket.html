@@ -1,0 +1,22 @@
+<h1>Your Tickets</h1>
+<ul>
+    {% if tickets %}
+    {% for ticket in tickets %}
+        <li>
+            <h2>{{ ticket.fullname }}</h2>
+            <p>Subject: {{ ticket.subject }}</p>
+            <p>{{ ticket.message }}</p>
+            <p>Created: {{ ticket.created }}</p>
+            {% if ticket.admin_response %}
+                <h3>Response from Admin</h3>
+                <p><strong>Admin:</strong> {{ ticket.admin_response }}</p>
+            {% else %}
+                <p>No response from admin yet.</p>
+            {% endif %}
+        </li>
+        <hr>
+    {% endfor %}
+    {% else %}
+    <p>شما هنوز تیکتی ارسال نکرده اید</p>
+    {% endif %}
+</ul>

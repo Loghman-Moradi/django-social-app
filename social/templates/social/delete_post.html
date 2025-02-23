@@ -1,0 +1,5 @@
+<p>آیا از حذف پست  ({{ post.description }}) مطمئن هستی؟ </p>
+<form method="post">
+    {% csrf_token %}
+    <input type="submit" value="حذف">
+</form>

@@ -1,0 +1,78 @@
+{#<div>#}
+{#    {% if sent %}#}
+{#        <h3>ارسال تیکت به پشتیبانی با موفقیت ثبت شد.</h3>#}
+{#    {% endif %}#}
+{#    <h2>ارسال تیکت به پشتیبانی</h2>#}
+{#    <form method="post">#}
+{#        {% csrf_token %}#}
+{#        {{ form.as_p }}#}
+{#        <input type="submit" value="ارسال">#}
+{#    </form>#}
+{#</div>#}
+
+
+
+
+
+
+
+{#<style>#}
+{##}
+{#    .messages .success{#}
+{#        color: #090707;#}
+{#        background-color: #89f60b;#}
+{##}
+{#    }#}
+{#        .messages .error{#}
+{#        color: #090707;#}
+{#        background-color: #c61616;#}
+{##}
+{#    }    .messages .info{#}
+{#        color: #090707;#}
+{#        background-color: #0b6fdc;#}
+{##}
+{#    }    .messages .warning{#}
+{#        color: #090707;#}
+{#        background-color: #cd6812;#}
+{##}
+{#    }#}
+{##}
+{#</style>#}
+{##}
+{#<div>#}
+{#    {% if messages %}#}
+{#        <ul class="messages">#}
+{#            {% for message in messages %}#}
+{#                <li class="{% if message.tags %}{{ message.tags }}{% endif %}">#}
+{#                    {{ message }}#}
+{#                </li>#}
+{#            {% endfor %}#}
+{#        </ul>#}
+{#    {% endif %}#}
+{#    <h2>ارسال تیکت به پشتیبانی</h2>#}
+{#    <form method="post">#}
+{#        {% csrf_token %}#}
+{#        {{ form.as_p }}#}
+{#        <input type="submit" value="ارسال">#}
+{#    </form>#}
+{#</div>#}
+
+<div>
+<h2>ارسال تیکت به پشتیبانی</h2>
+    {% if ticket_create %}
+        <h5>ارسال تیکت به پشتیبانی با موفقیت ثبت شد.</h5>
+        <br>
+        <button>
+            <a href="{% url 'social:ticket' %}">برگشت</a>
+        </button>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="ارسال">
+        </form>
+    {% endif %}
+</div>
+
+
+<a href="{% url 'social:user_ticket' %}">تیکت های ارسالی</a>

@@ -1,0 +1,8 @@
+{% if query %}
+    <p>{{ query.count }} نتایج جست وجو برای :{{ query }}</p>
+{% endif %}
+{% for post in results %}
+    <a href="{{ post.get_absolute_url }}">{{ post.description }}</a>
+ {% empty %}
+    هیچ نتیجه ای یافت نشد!
+{% endfor %}

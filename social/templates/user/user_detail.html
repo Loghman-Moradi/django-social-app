@@ -1,0 +1,114 @@
+{% load static %}
+{% load thumbnail %}
+
+<p>{{ user.get_full_name }}</p>
+
+
+{% if user.photo %}
+    <a>
+    <img src="{% thumbnail user.photo 150x0 quality=90 %}">
+    </a>
+{% else %}
+    <img src="{% static 'image/pofile/avatar.jpg' %}" style="width: 150px;">
+{% endif %}
+<br>
+<br>
+
+<a href="{% url 'chat:chat_view' user.username %}">چت</a>
+
+<br>
+<br>
+{% if request.user == user %}
+{% else %}
+    <button class="follow-button">
+    {% if request.user in user.followers.all %}
+        UnFollow
+    {% else %}
+        Follow
+    {% endif %}
+</button>
+{% endif %}
+
+<br>
+{% with total_followers=user.followers.count total_following=user.following.count %}
+    <button class="followers-button" data-user-id="{{ user.id }}">{{ total_followers }} Follower{{ total_followers|pluralize }}</button>
+    <button class="following-button" data-user-id="{{ user.id }}">{{ total_following }} Following</button>
+{% endwith %}
+
+
+<div id="followers-list" style="display:none;"></div>
+<div id="following-list" style="display:none;"></div>
+
+
+<p>Bio: {{ user.bio }}</p>
+<p>job: {{ user.job|default:"" }}</p>
+<p>Date of birth: {{ user.date_of_birth }}</p>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+        $('.follow-button').click(function() {
+            var button = $(this);
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'social:user_follow' %}',
+                data: {'user_id': '{{ user.id }}', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(data) {
+                    if (data.follow){
+                        button.text('UnFollow');
+                    } else {
+                        button.text('Follow');
+                    }
+                    $('.followers-button').text(data.followers_count + 'Follower{{ total_followers|pluralize }}');
+                    $('.following-button').text(data.following_count + 'Following');
+                },
+            });
+
+        });
+        $('.followers-button').click(function() {
+            var userId = $(this).data('user-id');
+
+    // بررسی اینکه آیا لیست فالوور‌ها نمایش داده شده یا نه
+            if ($('#followers-list').is(':visible')) {
+            $('#followers-list').hide(); // اگر نمایش داده شده، آن را مخفی کن
+            } else {
+            $.ajax({
+                type: 'GET',
+                url: `/user/${userId}/followers/`,
+                success: function(data) {
+                    var followersHtml = '<ul>';
+                    data.followers.forEach(function(follower) {
+                        followersHtml += `<li class="follower-item" data-user-id="${follower.id}">${follower.name}</li>`;
+                    });
+                    followersHtml += '</ul>';
+                    $('#followers-list').html(followersHtml).show(); // آن را نشان بده
+                },
+            });
+        }
+    });
+    $('.following-button').click(function() {
+        var userId = $(this).data('user-id');
+
+        if ($('#following-list').is(':visible')) {
+        $('#following-list').hide();
+        } else {
+        $.ajax({
+            type: 'GET',
+            url: `/user/${userId}/following/`,
+            success: function (data) {
+                var followingHtml = '<ul>';
+                data.following.forEach(function (followed) {
+                    followingHtml += '<li>' + followed.name + '</li>';
+                });
+                followingHtml += '</ul>';
+                $('#following-list').html(followingHtml).show();
+                },
+            });
+        }
+    });
+});
+
+</script>
+
