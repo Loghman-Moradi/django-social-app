@@ -14,8 +14,7 @@ And it provides the possibility of creating posts and interacting with each othe
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/username/mysocial.git
-   cd mysocial
+   git clone https://github.com/Loghman-Moradi/django-social-app.git
    ```
 
 2. Create and activate a virtual environment:
