@@ -1,17 +1,35 @@
-# MySocial - A simple social network
+<div>
+    <img src="https://media.giphy.com/media/jQmn1Dkw55R3cjm3eC/giphy.gif?cid=790b7611m85d9v9cvntoq298tfvt7c1fucwlhozamri3784i&ep=v1_gifs_search&rid=giphy.gif&ct=g" width="250" height="250">
+</div>
 
- :page_with_curl: My Social is a simple social network that is almost similar to Instagram and is developed with Django.
-And it provides the possibility of creating posts and interacting with each other.
+# :iphone: MySocial - A Social Media Application
+
+MySocial is a feature-rich social media application built with Django, similar to platforms like Instagram. The application allows users to create accounts, share posts, interact with others through comments and likes, and follow each other. 
+
+## Features
+
+:white_check_mark: **User Authentication**
+  - User registration
+  - Login and logout functionality
+  - Password change and reset options
+  - Profile editing
+
+:white_check_mark: **Posts Management**
+  - Create, edit, and delete posts
+  - Add images to posts
+  - View post details
+  - Like and save posts
+   
+:white_check_mark: **Social Interaction**
+  - Follow and unfollow users
+  - View followers and following lists
+  - Comment on posts
+  - Search posts
+  
+:white_check_mark: **Tickets System** (If applicable)
+  - Create and manage user support tickets
 
 
-## Key features
-:white_check_mark: Create and manage posts
-
-:white_check_mark: User authentication system
-
-:white_check_mark: Ability to interact with posts (like and comment)
-
-:white_check_mark: User profile management
 
 ## :wrench: Installation and Setup
 
@@ -40,3 +58,5 @@ And it provides the possibility of creating posts and interacting with each othe
    ```bash
    python manage.py runserver
    ```
+
+
